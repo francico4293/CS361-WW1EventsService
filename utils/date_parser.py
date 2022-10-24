@@ -5,6 +5,9 @@ from datetime import date
 
 class DateParser(object):
     __DATE_EXPRESSION_1 = "^[A-Za-z]{3,}[ ][0-9]{1,}$"
+    __DATE_EXPRESSION_2 = "^[A-Za-z]{3,}[ ][0-9]{1,}[–][0-9]{1,}$"
+    __DATE_EXPRESSION_3 = "^[A-Za-z]{3,}[ ][0-9]{1,}[ ][–][ ][A-Za-z]{3,}[ ][0-9]{1,}$"
+    __DATE_EXPRESSION_4 = "^[A-Za-z]{3,}[ ][0-9]{1,}[ ][–][ ][A-Za-z]{3,}[ ][0-9]{1,}[,][ ][1-9]{4}$"
     __SPACE_CHAR = ' '
     __EN_DASH = '–'
     __DATE_STR_TO_NUM_MAP = {
@@ -21,4 +24,31 @@ class DateParser(object):
     }
 
     def is_date(self, string: str) -> bool:
-        return re.search(self.__DATE_EXPRESSION_1, string)
+        return (
+            re.search(self.__DATE_EXPRESSION_1, string) or re.search(self.__DATE_EXPRESSION_2, string) or \
+            re.search(self.__DATE_EXPRESSION_3, string) or re.search(self.__DATE_EXPRESSION_4, string)
+        )
+    
+    def capture_events_for_date(self, date_string_to_parse: str, ww1_year: int, month: int, day: int) -> bool:
+        if (re.search(self.__DATE_EXPRESSION_1, date_string_to_parse)):
+            parsed_date_string = self.__date_expression_parser_1(date_string_to_parse, ww1_year)
+            return parsed_date_string == date(ww1_year, month, day)
+
+        return False
+    
+    def __date_expression_parser_1(self, date_string_to_parse: str, ww1_year: int) -> date:
+        try:
+            parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
+            return date(
+                ww1_year, 
+                self.__DATE_STR_TO_NUM_MAP[parsed_date[0][:3].upper()], 
+                int(parsed_date[1])
+            )
+        except ValueError:
+            return date(
+                ww1_year, 
+                self.__DATE_STR_TO_NUM_MAP[parsed_date[0][:3].upper()], 
+                self.__DAYS_IN_MONTH_MAP[parsed_date[0][:3].upper()]
+            )
+
+

@@ -41,7 +41,7 @@ def events():
             HTTP_400_BAD_REQUEST
         )
 
-    return make_response({}, HTTP_200_OK)
+    return make_response(events, HTTP_200_OK)
 
 
 if __name__ == "__main__":
