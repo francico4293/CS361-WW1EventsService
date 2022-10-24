@@ -5,7 +5,10 @@ from flask import request
 from flask_api.status import HTTP_400_BAD_REQUEST
 from flask_api.status import HTTP_200_OK
 
+from utils.date_parser import DateParser
+
 from service.events_service import EventsService
+
 
 # constants
 DAY = "day"
@@ -31,7 +34,7 @@ def events():
 
     # get events for day and month in request object
     try:
-        events = EventsService().get_events(req[DAY], req[MONTH])
+        events = EventsService(DateParser()).get_events(req[DAY], req[MONTH])
     except ValueError:
         return make_response(
             { "Error": "Request object contains 1 or more misconfigured attribute values" },
