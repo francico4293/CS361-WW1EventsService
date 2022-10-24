@@ -53,5 +53,4 @@ class EventsService(object):
                 elif (not self.__date_parser.is_date(row_data[0].text.strip()) and self.__CAPTURE_EVENTS):
                     pass
         
-        print(self.__events)
         return self.__events

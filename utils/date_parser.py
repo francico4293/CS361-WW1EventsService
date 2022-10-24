@@ -33,6 +33,9 @@ class DateParser(object):
         if (re.search(self.__DATE_EXPRESSION_1, date_string_to_parse)):
             parsed_date_string = self.__date_expression_parser_1(date_string_to_parse, ww1_year)
             return parsed_date_string == date(ww1_year, month, day)
+        elif (re.search(self.__DATE_EXPRESSION_2, date_string_to_parse)):
+            parsed_date_string = self.__date_expression_parser_2(date_string_to_parse, ww1_year)
+            return parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]
 
         return False
     
@@ -51,4 +54,32 @@ class DateParser(object):
                 self.__DAYS_IN_MONTH_MAP[parsed_date[0][:3].upper()]
             )
 
-
+    def __date_expression_parser_2(self, date_string_to_parse: str, ww1_year: int) -> list:
+        try:
+            parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
+            parsed_days = parsed_date[1].split(self.__EN_DASH)
+            return [
+                date(
+                    ww1_year, 
+                    self.__DATE_STR_TO_NUM_MAP[parsed_date[0][:3].upper()], 
+                    int(parsed_days[0])
+                ),
+                date(
+                    ww1_year, 
+                    self.__DATE_STR_TO_NUM_MAP[parsed_date[0][:3].upper()], 
+                    int(parsed_days[1])
+                )
+            ]
+        except ValueError:
+            return [
+                date(
+                    ww1_year, 
+                    self.__DATE_STR_TO_NUM_MAP[parsed_date[0][:3].upper()], 
+                    int(parsed_days[0])
+                ),
+                date(
+                    ww1_year, 
+                    self.__DATE_STR_TO_NUM_MAP[parsed_date[0][:3].upper()], 
+                    self.__DAYS_IN_MONTH_MAP[parsed_date[0][:3].upper()]
+                )
+            ]
