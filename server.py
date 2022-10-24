@@ -3,6 +3,9 @@ from flask import make_response
 from flask import request
 
 from flask_api.status import HTTP_400_BAD_REQUEST
+from flask_api.status import HTTP_200_OK
+
+from service.events_service import EventsService
 
 # constants
 DAY = "day"
@@ -26,7 +29,16 @@ def events():
             HTTP_400_BAD_REQUEST
         )
 
-    return "Hello from Flask"
+    # get events for day and month in request object
+    try:
+        events = EventsService().get_events(req[DAY], req[MONTH])
+    except ValueError:
+        return make_response(
+            { "Error": "Request object contains 1 or more misconfigured attribute values" },
+            HTTP_400_BAD_REQUEST
+        )
+
+    return make_response({}, HTTP_200_OK)
 
 
 if __name__ == "__main__":
