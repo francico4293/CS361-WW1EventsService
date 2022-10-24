@@ -2,17 +2,17 @@ from flask import Flask
 from flask import make_response
 from flask import request
 
-from flask_api import status
+from flask_api.status import HTTP_400_BAD_REQUEST
 
-from constants.common_constants import CommonConstants
-DAY = CommonConstants.DAY
-MONTH = CommonConstants.MONTH
-
+# constants
+DAY = "day"
+MONTH = "month"
+GET = "GET"
 
 # initialize new Flask application
 app = Flask(__name__)
 
-@app.route("/events", methods=["GET"])
+@app.route("/events", methods=[GET])
 def events():
     # get request body as JSON object
     req = request.json
@@ -23,7 +23,7 @@ def events():
     if (not DAY in req_attributes) or (not MONTH in req_attributes):
         return make_response(
             { "Error": "Request object missing 1 or more required attributes" },
-            status.HTTP_400_BAD_REQUEST
+            HTTP_400_BAD_REQUEST
         )
 
     return "Hello from Flask"
