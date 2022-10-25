@@ -10,6 +10,7 @@ class DateParser(object):
     __DATE_EXPRESSION_4 = "^[A-Za-z]{3,}[ ][0-9]{1,}[ ][–][ ][A-Za-z]{3,}[ ][0-9]{1,}[,][ ][1-9]{4}$"
     __SPACE_CHAR = ' '
     __EN_DASH = '–'
+    __COMMA_CHAR = ','
     __DATE_STR_TO_NUM_MAP = {
         "JAN": 1, "FEB": 2, "MAR": 3, 
         "APR": 4, "MAY": 5, "JUN": 6,
@@ -39,8 +40,22 @@ class DateParser(object):
         elif (re.search(self.__DATE_EXPRESSION_3, date_string_to_parse)):
             parsed_date_string = self.__date_expression_parser_3(date_string_to_parse, ww1_year)
             return parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]
+        elif (re.search(self.__DATE_EXPRESSION_4, date_string_to_parse)):
+            parsed_date_string = self.__date_expression_parser_4(date_string_to_parse, ww1_year)
+            return parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]
 
         return False
+    
+    def get_event_duration_in_years(self, date_string_to_parse: str, ww1_year: int, month: int, day: int) -> int:
+        event_duration = 0;
+
+        if re.search(self.__DATE_EXPRESSION_4, date_string_to_parse):
+            start_date, end_date = self.__date_expression_parser_4(date_string_to_parse, ww1_year)
+            end_date = date(end_date.year, month, day) if date(end_date.year, month, day) < end_date else date(end_date.year - 1, month, day)
+            return (end_date.year - start_date.year) + 1
+        
+        return event_duration + 1
+        
     
     def __date_expression_parser_1(self, date_string_to_parse: str, ww1_year: int) -> date:
         try:
@@ -116,3 +131,20 @@ class DateParser(object):
                 )
             ]
 
+    def __date_expression_parser_4(self, date_string_to_parse: str, ww1_year: int) -> list:
+        try:
+            parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
+            return [
+                date(
+                    ww1_year, 
+                    self.__DATE_STR_TO_NUM_MAP[parsed_date[0][:3].upper()], 
+                    int(parsed_date[1])
+                ),
+                date(
+                    ww1_year + (int(parsed_date[5]) - ww1_year), 
+                    self.__DATE_STR_TO_NUM_MAP[parsed_date[3][:3].upper()], 
+                    int(parsed_date[4].split(self.__COMMA_CHAR)[0])
+                )
+            ]
+        except ValueError:
+            pass

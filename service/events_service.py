@@ -17,7 +17,7 @@ class EventsService(object):
     __TABLE = "table"
     __TR = "tr"
     __TD = "td"
-    __YEARS = [1914]
+    __WW1_YEARS = [1914]
     __CAPTURE_EVENTS = False
 
     def __init__(self, date_parser: DateParser):
@@ -35,20 +35,30 @@ class EventsService(object):
         soup = BeautifulSoup(events_page.content, self.__HTML_PARSER)
 
         # iterate over each WW1 year
-        for year in self.__YEARS:
+        for year in self.__WW1_YEARS:
+            # get WW1 events table by year
             events_table = soup.find(self.__SPAN, { self.__ID: str(year) }).find_next(self.__TABLE).find_all(self.__TR)
             
+            # count number of events in WW1 event table
             num_rows = len(events_table)
             for row in range(1, num_rows):
+                # get each row in WW1 events table
                 row_data = events_table[row].find_all(self.__TD)
+                # if the data at index 0 in row_data array is a date and the client provided day and month is equal to or in the date range, then capture events
                 if (self.__date_parser.is_date(row_data[0].text.strip()) and self.__date_parser.capture_events_for_date(row_data[0].text.strip(), year, month, day)):
+                    # determine how long the event lasted and if there were multiple year occurences of the event for the day and month
+                    event_duration = self.__date_parser.get_event_duration_in_years(row_data[0].text.strip(), year, month, day)
+
                     row_data_idx, row_data_length = 1, len(row_data)
+                    # iterate over event data from row
                     while (row_data_idx < row_data_length):
-                        self.__events[self.__EVENTS].append({
-                            self.__THEATER_FRONT_CAMPAIGN: row_data[row_data_idx].text.strip(),
-                            self.__EVENT: row_data[row_data_idx + 1].text.strip(),
-                            self.__YEAR: year
-                        })
+                        # add event number of times given by event_duration
+                        for year_offset in range(event_duration):
+                            self.__events[self.__EVENTS].append({
+                                self.__THEATER_FRONT_CAMPAIGN: row_data[row_data_idx].text.strip(),
+                                self.__EVENT: row_data[row_data_idx + 1].text.strip(),
+                                self.__YEAR: year + year_offset
+                            })
                         row_data_idx += 2
                 elif (not self.__date_parser.is_date(row_data[0].text.strip()) and self.__CAPTURE_EVENTS):
                     pass
