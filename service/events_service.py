@@ -60,14 +60,14 @@ class EventsService(object):
                 # if the data at index 0 in row_data array is a date and the client provided day and month is equal to or in the date range, then capture events
                 if self.__capture_events:
                     # determine how long the event lasted and if there were multiple year occurences of the event for the day and month
-                    event_duration = self.__date_parser.get_event_duration_in_years(row_data[0].text.strip(), year, month, day)
-                    
+                    event_year_offset_array = self.__date_parser.get_event_year_offset_array(row_data[0].text.strip(), year, month, day)
+
                     # if row_data at row_data_idx is a date then begin capture events at idx 1, otherwise start at idx 0
                     row_data_idx = 1 if self.__date_parser.is_date(row_data[0].text.strip()) else 0
                     # iterate over event data from row
                     while (row_data_idx < row_data_length):
                         # add event number of times given by event_duration
-                        for year_offset in range(event_duration):
+                        for year_offset in event_year_offset_array:
                             self.__events[self.__EVENTS].append({
                                 self.__THEATER_FRONT_CAMPAIGN: row_data[row_data_idx].text.strip(),
                                 self.__EVENT: re.sub(self.__REPLACEMENT_EXPRESSION, "", row_data[row_data_idx + 1].text.strip()),
