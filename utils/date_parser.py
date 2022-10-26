@@ -14,6 +14,7 @@ class DateParser(object):
     __DATE_EXPRESSION_8 = "^[A-Za-z]{3,}[–]{1,}[A-Za-z]{3,}$"
     __DATE_EXPRESSION_9 = "^[A-Za-z]{3,}[ ][–][ ][A-Za-z]{3,}[,][ ][1-9]{4}$"
     __DATE_EXPRESSION_10 = "^[A-Za-z]{3,}[ ][0-9]{1,}[ ][–][ ][A-Za-z]{3,}"
+    __DATE_EXPRESSION_11 = "^[A-Za-z]{3,}[ ][–|to]{1,}[ ]{1,}[A-Za-z]{3,}$"
     __SPACE_CHAR = ' '
     __EN_DASH = '–'
     __COMMA_CHAR = ','
@@ -36,7 +37,8 @@ class DateParser(object):
             re.search(self.__DATE_EXPRESSION_3, string) or re.search(self.__DATE_EXPRESSION_4, string) or \
             re.search(self.__DATE_EXPRESSION_5, string) or re.search(self.__DATE_EXPRESSION_6, string) or \
             re.search(self.__DATE_EXPRESSION_7, string) or re.search(self.__DATE_EXPRESSION_8, string) or \
-            re.search(self.__DATE_EXPRESSION_9, string) or re.search(self.__DATE_EXPRESSION_10, string)
+            re.search(self.__DATE_EXPRESSION_9, string) or re.search(self.__DATE_EXPRESSION_10, string) or \
+            re.search(self.__DATE_EXPRESSION_11, string)
         )
     
     def capture_events_for_date(self, date_string_to_parse: str, ww1_year: int, month: int, day: int) -> bool:
@@ -69,6 +71,9 @@ class DateParser(object):
             return self.__is_date_in_multi_year_event(parsed_date_string, ww1_year, month, day)
         elif (re.search(self.__DATE_EXPRESSION_10, date_string_to_parse)):
             parsed_date_string = self.__date_expression_parser_10(date_string_to_parse, ww1_year)
+            return parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]
+        elif (re.search(self.__DATE_EXPRESSION_11, date_string_to_parse)):
+            parsed_date_string = self.__date_expression_parser_11(date_string_to_parse, ww1_year)
             return parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]
 
         return False
@@ -348,3 +353,19 @@ class DateParser(object):
                     self.__DAYS_IN_MONTH_MAP[parsed_date[3][:3].upper()]
                 )
             ]
+    
+    def __date_expression_parser_11(self, date_string_to_parse: str, ww1_year: int) -> list[date]:
+        parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
+        return [
+            date(
+                ww1_year, 
+                self.__DATE_STR_TO_NUM_MAP[parsed_date[0][:3].upper()], 
+                1
+            ),
+            date(
+                ww1_year, 
+                self.__DATE_STR_TO_NUM_MAP[parsed_date[2][:3].upper()], 
+                self.__DAYS_IN_MONTH_MAP[parsed_date[2][:3].upper()]
+            )
+        ]
+

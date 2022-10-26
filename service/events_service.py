@@ -20,7 +20,7 @@ class EventsService(object):
     __TR = "tr"
     __TD = "td"
     __REPLACEMENT_EXPRESSION = "[ ][(]Details[)]|\[[1-9]{1,}\]"
-    __WW1_YEARS = [1914, 1915, 1916]
+    __WW1_YEARS = [1914, 1915, 1916, 1917, 1918, 1919, 1920]
 
     def __init__(self, date_parser: DateParser):
         self.__date_parser = date_parser
@@ -41,7 +41,7 @@ class EventsService(object):
         for year in self.__WW1_YEARS:
             # get WW1 events table by year
             events_table = soup.find(self.__SPAN, { self.__ID: str(year) }).find_next(self.__TABLE).find_all(self.__TR)
-            
+
             # count number of events in WW1 event table
             num_rows = len(events_table)
             for row in range(1, num_rows):
