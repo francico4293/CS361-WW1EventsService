@@ -12,7 +12,7 @@ class DateParser(object):
     __DATE_EXPRESSION_6 = "^[A-Za-z]{3,}[–][A-Za-z]{3,}[ ][0-9]{1,}[,][ ][1-9]{4}$"
     __DATE_EXPRESSION_7 = "^[A-Za-z]{3,}[ ][0-9]{1,}[ ][–][ ][0-9]{1,}[ ][A-Za-z]{3,}[ ][1-9]{4}$"
     __DATE_EXPRESSION_8 = "^[A-Za-z]{3,}[–]{1,}[A-Za-z]{3,}$"
-    __DATE_EXPRESSION_9 = "^[A-Za-z]{3,}[ ][–][ ]{1,}[A-Za-z]{3,}[,][ ][1-9]{4}$"
+    __DATE_EXPRESSION_9 = "^[A-Za-z]{3,}[ ][–][ ][A-Za-z]{3,}[,][ ][1-9]{4}$"
     __SPACE_CHAR = ' '
     __EN_DASH = '–'
     __COMMA_CHAR = ','
@@ -64,6 +64,7 @@ class DateParser(object):
             parsed_date_string = self.__date_expression_parser_8(date_string_to_parse, ww1_year)
             return parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]
         elif (re.search(self.__DATE_EXPRESSION_9, date_string_to_parse)):
+            print(date_string_to_parse)
             parsed_date_string = self.__date_expression_parser_9(date_string_to_parse, ww1_year)
             return self.__is_date_in_multi_year_event(parsed_date_string, ww1_year, month, day)
 
