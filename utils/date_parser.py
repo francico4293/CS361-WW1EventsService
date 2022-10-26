@@ -9,6 +9,8 @@ class DateParser(object):
     __DATE_EXPRESSION_3 = "^[A-Za-z]{3,}[ ][0-9]{1,}[ ][–][ ][A-Za-z]{3,}[ ][0-9]{1,}$"
     __DATE_EXPRESSION_4 = "^[A-Za-z]{3,}[ ][0-9]{1,}[ ][–][ ][A-Za-z]{3,}[ ][0-9]{1,}[,][ ][1-9]{4}$"
     __DATE_EXPRESSION_5 = "^[A-Za-z]{3,}[0-9]{1,}[–][0-9]{1,}$"
+    __DATE_EXPRESSION_6 = "^[A-Za-z]{3,}[–][A-Za-z]{3,}[ ][0-9]{1,}[,][ ][1-9]{4}$"
+    __DATE_EXPRESSION_7 = "^[A-Za-z]{3,}[ ][0-9]{1,}[ ][–][ ][0-9]{1,}[ ][A-Za-z]{3,}[ ][1-9]{4}$"
     __SPACE_CHAR = ' '
     __EN_DASH = '–'
     __COMMA_CHAR = ','
@@ -29,7 +31,8 @@ class DateParser(object):
         return (
             re.search(self.__DATE_EXPRESSION_1, string) or re.search(self.__DATE_EXPRESSION_2, string) or \
             re.search(self.__DATE_EXPRESSION_3, string) or re.search(self.__DATE_EXPRESSION_4, string) or \
-            re.search(self.__DATE_EXPRESSION_5, string)
+            re.search(self.__DATE_EXPRESSION_5, string) or re.search(self.__DATE_EXPRESSION_6, string) or \
+            re.search(self.__DATE_EXPRESSION_7, string)
         )
     
     def capture_events_for_date(self, date_string_to_parse: str, ww1_year: int, month: int, day: int) -> bool:
@@ -48,6 +51,12 @@ class DateParser(object):
         elif (re.search(self.__DATE_EXPRESSION_5, date_string_to_parse)):
             parsed_date_string = self.__date_expression_parser_5(date_string_to_parse, ww1_year)
             return parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]
+        elif (re.search(self.__DATE_EXPRESSION_6, date_string_to_parse)):
+            parsed_date_string = self.__date_expression_parser_6(date_string_to_parse, ww1_year)
+            return parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]
+        elif (re.search(self.__DATE_EXPRESSION_7, date_string_to_parse)):
+            parsed_date_string = self.__date_expression_parser_7(date_string_to_parse, ww1_year)
+            return parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]
 
         return False
     
@@ -63,8 +72,8 @@ class DateParser(object):
         
     
     def __date_expression_parser_1(self, date_string_to_parse: str, ww1_year: int) -> date:
+        parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
         try:
-            parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
             return date(
                 ww1_year, 
                 self.__DATE_STR_TO_NUM_MAP[parsed_date[0][:3].upper()], 
@@ -78,9 +87,9 @@ class DateParser(object):
             )
 
     def __date_expression_parser_2(self, date_string_to_parse: str, ww1_year: int) -> list:
+        parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
+        parsed_days = parsed_date[1].split(self.__EN_DASH)
         try:
-            parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
-            parsed_days = parsed_date[1].split(self.__EN_DASH)
             return [
                 date(
                     ww1_year, 
@@ -108,8 +117,8 @@ class DateParser(object):
             ]
     
     def __date_expression_parser_3(self, date_string_to_parse: str, ww1_year: int) -> list:
+        parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
         try:
-            parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
             return [
                 date(
                     ww1_year,
@@ -137,8 +146,8 @@ class DateParser(object):
             ]
 
     def __date_expression_parser_4(self, date_string_to_parse: str, ww1_year: int) -> list:
+        parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
         try:
-            parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
             return [
                 date(
                     ww1_year, 
@@ -152,22 +161,101 @@ class DateParser(object):
                 )
             ]
         except ValueError:
-            pass
+            return [
+                date(
+                    ww1_year, 
+                    self.__DATE_STR_TO_NUM_MAP[parsed_date[0][:3].upper()], 
+                    self.__DAYS_IN_MONTH_MAP[parsed_date[0][:3].upper()]
+                ),
+                date(
+                    ww1_year + (int(parsed_date[5]) - ww1_year), 
+                    self.__DATE_STR_TO_NUM_MAP[parsed_date[3][:3].upper()], 
+                    self.__DAYS_IN_MONTH_MAP[parsed_date[3][:3].upper()]
+                )
+            ]
     
     def __date_expression_parser_5(self, date_string_to_parse: str, ww1_year: int) -> list:
         try:
             return [
-            date(
-                ww1_year, 
-                self.__DATE_STR_TO_NUM_MAP[date_string_to_parse[:3].upper()], 
-                int(date_string_to_parse[3:4])
-            ),
-            date(
-                ww1_year, 
-                self.__DATE_STR_TO_NUM_MAP[date_string_to_parse[:3].upper()], 
-                int(date_string_to_parse[5:])
-            )
-        ]
+                date(
+                    ww1_year, 
+                    self.__DATE_STR_TO_NUM_MAP[date_string_to_parse[:3].upper()], 
+                    int(date_string_to_parse[3:4])
+                ),
+                date(
+                    ww1_year, 
+                    self.__DATE_STR_TO_NUM_MAP[date_string_to_parse[:3].upper()], 
+                    int(date_string_to_parse[5:])
+                )
+            ]
         except ValueError:
-            pass
+            return [
+                date(
+                    ww1_year, 
+                    self.__DATE_STR_TO_NUM_MAP[date_string_to_parse[:3].upper()], 
+                    int(date_string_to_parse[3:4])
+                ),
+                date(
+                    ww1_year, 
+                    self.__DATE_STR_TO_NUM_MAP[date_string_to_parse[:3].upper()], 
+                    self.__DAYS_IN_MONTH_MAP[date_string_to_parse[:3].upper()]
+                )
+            ]
+    
+    def __date_expression_parser_6(self, date_string_to_parse: str, ww1_year: int) -> list:
+        parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
+        try:
+            return [
+                date(
+                    ww1_year, 
+                    self.__DATE_STR_TO_NUM_MAP[parsed_date[0][:3].upper()], 
+                    1
+                ),
+                date(
+                    ww1_year + (int(parsed_date[2]) - ww1_year), 
+                    self.__DATE_STR_TO_NUM_MAP[parsed_date[0][4:].upper()], 
+                    int(parsed_date[1].split(',')[0].upper())
+                )
+            ]
+        except ValueError:
+            return [
+                date(
+                    ww1_year, 
+                    self.__DATE_STR_TO_NUM_MAP[parsed_date[0][:3].upper()], 
+                    1
+                ),
+                date(
+                    ww1_year + (int(parsed_date[2]) - ww1_year), 
+                    self.__DATE_STR_TO_NUM_MAP[parsed_date[0][4:].upper()], 
+                    self.__DAYS_IN_MONTH_MAP[parsed_date[0][4:].upper()]
+                )
+            ]
 
+    def __date_expression_parser_7(self, date_string_to_parse: str, ww1_year: int) -> list:
+        parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
+        try:
+            return [
+                date(
+                    ww1_year,
+                    self.__DATE_STR_TO_NUM_MAP[parsed_date[0][:3].upper()],
+                    int(parsed_date[1])
+                ),
+                date(
+                    ww1_year + (int(parsed_date[5]) - ww1_year),
+                    self.__DATE_STR_TO_NUM_MAP[parsed_date[4][:3].upper()],
+                    int(parsed_date[3])
+                )
+            ]
+        except ValueError:
+            return [
+                date(
+                    ww1_year,
+                    self.__DATE_STR_TO_NUM_MAP[parsed_date[0][:3].upper()],
+                    self.__DAYS_IN_MONTH_MAP[parsed_date[0][:3].upper()]
+                ),
+                date(
+                    ww1_year + (int(parsed_date[5]) - ww1_year),
+                    self.__DATE_STR_TO_NUM_MAP[parsed_date[4][:3].upper()],
+                    self.__DAYS_IN_MONTH_MAP[parsed_date[4][:3].upper()]
+                )
+            ]
