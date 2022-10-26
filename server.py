@@ -4,6 +4,7 @@ from flask import request
 
 from flask_api.status import HTTP_400_BAD_REQUEST
 from flask_api.status import HTTP_200_OK
+from flask_api.status import HTTP_500_INTERNAL_SERVER_ERROR
 
 from utils.date_parser import DateParser
 
@@ -39,6 +40,11 @@ def events():
         return make_response(
             { "Error": "Request object contains 1 or more misconfigured attribute values" },
             HTTP_400_BAD_REQUEST
+        )
+    except Exception:
+        return make_response(
+            { "Error": "An internal server error has occurred" },
+            HTTP_500_INTERNAL_SERVER_ERROR
         )
 
     return make_response(events, HTTP_200_OK)
