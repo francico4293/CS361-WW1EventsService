@@ -21,10 +21,10 @@ class EventsService(object):
     __TD = "td"
     __REPLACEMENT_EXPRESSION = "[\[0-9\]]{0,}[ ][(]Details[)]"
     __WW1_YEARS = [1914]
-    __CAPTURE_EVENTS = False
 
     def __init__(self, date_parser: DateParser):
         self.__date_parser = date_parser
+        self.__capture_events = False
         self.__events = { self.__EVENTS: [] }
 
     def get_events(self, day: str, month: str) -> dict:
@@ -50,15 +50,15 @@ class EventsService(object):
                 row_data_length = len(row_data)
 
                 # turn capture events flag on or off
-                self.__CAPTURE_EVENTS = (self.__date_parser.is_date(row_data[0].text.strip()) and \
+                self.__capture_events = (self.__date_parser.is_date(row_data[0].text.strip()) and \
                     self.__date_parser.capture_events_for_date(row_data[0].text.strip(), year, month, day)) or \
-                        (not self.__date_parser.is_date(row_data[0].text.strip()) and self.__CAPTURE_EVENTS)
+                        (not self.__date_parser.is_date(row_data[0].text.strip()) and self.__capture_events)
                 
                 # stand alone date in row - no events can be capture from this row
                 if row_data_length == 1: continue
 
                 # if the data at index 0 in row_data array is a date and the client provided day and month is equal to or in the date range, then capture events
-                if self.__CAPTURE_EVENTS:
+                if self.__capture_events:
                     # determine how long the event lasted and if there were multiple year occurences of the event for the day and month
                     event_duration = self.__date_parser.get_event_duration_in_years(row_data[0].text.strip(), year, month, day)
                     
