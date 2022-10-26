@@ -19,7 +19,7 @@ class EventsService(object):
     __TABLE = "table"
     __TR = "tr"
     __TD = "td"
-    __REPLACEMENT_EXPRESSION = "[\[0-9\]]{0,}[ ][(]Details[)]"
+    __REPLACEMENT_EXPRESSION = "[ ][(]Details[)]|\[[1-9]{1,}\]"
     __WW1_YEARS = [1914]
 
     def __init__(self, date_parser: DateParser):
