@@ -13,7 +13,7 @@ class DateParser(object):
     __DATE_EXPRESSION_7 = "^[A-Za-z]{3,}[ ][0-9]{1,}[ ][–][ ][0-9]{1,}[ ][A-Za-z]{3,}[ ][1-9]{4}$"
     __DATE_EXPRESSION_8 = "^[A-Za-z]{3,}[–]{1,}[A-Za-z]{3,}$"
     __DATE_EXPRESSION_9 = "^[A-Za-z]{3,}[ ][–][ ][A-Za-z]{3,}[,][ ][1-9]{4}$"
-    __DATE_EXPRESSION_10 = "^[A-Za-z]{3,}[ ][0-9]{1,}[ ][–][ ][A-Za-z]{3,}"
+    __DATE_EXPRESSION_10 = "^[A-Za-z]{3,}[ ][0-9]{1,}[ ][–][ ][A-Za-z]{3,}$"
     __DATE_EXPRESSION_11 = "^[A-Za-z]{3,}[ ][–|to]{1,}[ ]{1,}[A-Za-z]{3,}$"
     __SPACE_CHAR = ' '
     __EN_DASH = '–'
