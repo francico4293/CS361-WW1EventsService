@@ -72,6 +72,12 @@ class DateParser(object):
     def get_event_year_offset_array(self, date_string_to_parse: str, ww1_year: int, month: int, day: int) -> list[int]:
         if re.search(self.__DATE_EXPRESSION_4, date_string_to_parse):
             parsed_date_string = self.__date_expression_parser_4(date_string_to_parse, ww1_year)
+        elif re.search(self.__DATE_EXPRESSION_6, date_string_to_parse):
+            parsed_date_string = self.__date_expression_parser_6(date_string_to_parse, ww1_year)
+        elif re.search(self.__DATE_EXPRESSION_7, date_string_to_parse):
+            parsed_date_string = self.__date_expression_parser_7(date_string_to_parse, ww1_year)
+        elif re.search(self.__DATE_EXPRESSION_9, date_string_to_parse):
+            parsed_date_string = self.__date_expression_parser_9(date_string_to_parse, ww1_year)
         else:
             return [0]
         
