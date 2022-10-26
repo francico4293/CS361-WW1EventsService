@@ -69,7 +69,7 @@ class DateParser(object):
 
         return False
     
-    def get_event_year_offset_array(self, date_string_to_parse: str, ww1_year: int, month: int, day: int) -> list:
+    def get_event_year_offset_array(self, date_string_to_parse: str, ww1_year: int, month: int, day: int) -> list[int]:
         if re.search(self.__DATE_EXPRESSION_4, date_string_to_parse):
             parsed_date_string = self.__date_expression_parser_4(date_string_to_parse, ww1_year)
         else:
@@ -106,7 +106,7 @@ class DateParser(object):
                 self.__DAYS_IN_MONTH_MAP[parsed_date[0][:3].upper()]
             )
 
-    def __date_expression_parser_2(self, date_string_to_parse: str, ww1_year: int) -> list:
+    def __date_expression_parser_2(self, date_string_to_parse: str, ww1_year: int) -> list[date]:
         parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
         parsed_days = parsed_date[1].split(self.__EN_DASH)
         try:
@@ -136,7 +136,7 @@ class DateParser(object):
                 )
             ]
     
-    def __date_expression_parser_3(self, date_string_to_parse: str, ww1_year: int) -> list:
+    def __date_expression_parser_3(self, date_string_to_parse: str, ww1_year: int) -> list[date]:
         parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
         try:
             return [
@@ -165,7 +165,7 @@ class DateParser(object):
                 )
             ]
 
-    def __date_expression_parser_4(self, date_string_to_parse: str, ww1_year: int) -> list:
+    def __date_expression_parser_4(self, date_string_to_parse: str, ww1_year: int) -> list[date]:
         parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
         try:
             return [
@@ -194,7 +194,7 @@ class DateParser(object):
                 )
             ]
     
-    def __date_expression_parser_5(self, date_string_to_parse: str, ww1_year: int) -> list:
+    def __date_expression_parser_5(self, date_string_to_parse: str, ww1_year: int) -> list[date]:
         try:
             return [
                 date(
@@ -222,7 +222,7 @@ class DateParser(object):
                 )
             ]
     
-    def __date_expression_parser_6(self, date_string_to_parse: str, ww1_year: int) -> list:
+    def __date_expression_parser_6(self, date_string_to_parse: str, ww1_year: int) -> list[date]:
         parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
         try:
             return [
@@ -251,7 +251,7 @@ class DateParser(object):
                 )
             ]
 
-    def __date_expression_parser_7(self, date_string_to_parse: str, ww1_year: int) -> list:
+    def __date_expression_parser_7(self, date_string_to_parse: str, ww1_year: int) -> list[date]:
         parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
         try:
             return [
@@ -280,7 +280,7 @@ class DateParser(object):
                 )
             ]
     
-    def __date_expression_parser_8(self, date_string_to_parse: str, ww1_year: int) -> list:
+    def __date_expression_parser_8(self, date_string_to_parse: str, ww1_year: int) -> list[date]:
         parsed_date = date_string_to_parse.split(self.__EN_DASH)
         return [
             date(
@@ -295,7 +295,7 @@ class DateParser(object):
             )
         ]
     
-    def __date_expression_parser_9(self, date_string_to_parse: str, ww1_year: int) -> list:
+    def __date_expression_parser_9(self, date_string_to_parse: str, ww1_year: int) -> list[date]:
         parsed_date = date_string_to_parse.split(self.__SPACE_CHAR)
         return [
             date(
