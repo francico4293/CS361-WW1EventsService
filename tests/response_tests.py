@@ -10,10 +10,16 @@ class TestWW1EventsApi(unittest.TestCase):
     __JANUARY = 1
     __FEBRUARY = 2
     __MARCH = 3
+    __APRIL = 4
+    __MAY = 5
+    __JUNE = 6
     __DECEMBER = 12
     __DAYS_IN_JANUARY = 31
     __DAYS_IN_FEBRUARY = 28
     __DAYS_IN_MARCH = 31
+    __DAYS_IN_APRIL = 30
+    __DAYS_IN_MAY = 31
+    __DAYS_IN_JUNE = 30
     __DAYS_IN_DECEMBER = 31
     
     def test_api_response_january(self):
@@ -31,6 +37,24 @@ class TestWW1EventsApi(unittest.TestCase):
     def test_api_response_march(self):
         for day in range(1, self.__DAYS_IN_MARCH + 1):
             data = { self.__DAY: day, self.__MONTH: self.__MARCH }
+            response = requests.get(self.__URL, json=data)
+            self.assertEqual(response.status_code, 200)
+    
+    def test_api_response_april(self):
+        for day in range(1, self.__DAYS_IN_APRIL + 1):
+            data = { self.__DAY: day, self.__MONTH: self.__APRIL }
+            response = requests.get(self.__URL, json=data)
+            self.assertEqual(response.status_code, 200)
+    
+    def test_api_response_may(self):
+        for day in range(1, self.__DAYS_IN_MAY + 1):
+            data = { self.__DAY: day, self.__MONTH: self.__MAY }
+            response = requests.get(self.__URL, json=data)
+            self.assertEqual(response.status_code, 200)
+    
+    def test_api_response_june(self):
+        for day in range(1, self.__DAYS_IN_JUNE + 1):
+            data = { self.__DAY: day, self.__MONTH: self.__JUNE }
             response = requests.get(self.__URL, json=data)
             self.assertEqual(response.status_code, 200)
     
