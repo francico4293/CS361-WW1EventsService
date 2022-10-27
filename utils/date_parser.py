@@ -33,6 +33,7 @@ class DateParser(object):
     }
 
     def is_date(self, string: str) -> bool:
+        # look for string to match one of the 12 regex patterns
         return (
             re.search(self.__DATE_EXPRESSION_1, string) or re.search(self.__DATE_EXPRESSION_2, string) or \
             re.search(self.__DATE_EXPRESSION_3, string) or re.search(self.__DATE_EXPRESSION_4, string) or \
@@ -43,39 +44,51 @@ class DateParser(object):
         )
     
     def capture_events_for_date(self, date_string_to_parse: str, ww1_year: int, month: int, day: int) -> bool:
+        # date is matches regex pattern 1
         if (re.search(self.__DATE_EXPRESSION_1, date_string_to_parse)):
             parsed_date_string = self.__date_expression_parser_1(date_string_to_parse, ww1_year)
             return parsed_date_string == date(ww1_year, month, day)
+        # date is matches regex pattern 2
         elif (re.search(self.__DATE_EXPRESSION_2, date_string_to_parse)):
             parsed_date_string = self.__date_expression_parser_2(date_string_to_parse, ww1_year)
             return parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]
+        # date is matches regex pattern 3
         elif (re.search(self.__DATE_EXPRESSION_3, date_string_to_parse)):
             parsed_date_string = self.__date_expression_parser_3(date_string_to_parse, ww1_year)
             return parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]
+        # date is matches regex pattern 4
         elif (re.search(self.__DATE_EXPRESSION_4, date_string_to_parse)):
             parsed_date_string = self.__date_expression_parser_4(date_string_to_parse, ww1_year)
             return self.__is_date_in_multi_year_event(parsed_date_string, ww1_year, month, day)
+        # date is matches regex pattern 5
         elif (re.search(self.__DATE_EXPRESSION_5, date_string_to_parse)):
             parsed_date_string = self.__date_expression_parser_5(date_string_to_parse, ww1_year)
             return parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]
+        # date is matches regex pattern 6
         elif (re.search(self.__DATE_EXPRESSION_6, date_string_to_parse)):
             parsed_date_string = self.__date_expression_parser_6(date_string_to_parse, ww1_year)
             return self.__is_date_in_multi_year_event(parsed_date_string, ww1_year, month, day)
+        # date is matches regex pattern 7
         elif (re.search(self.__DATE_EXPRESSION_7, date_string_to_parse)):
             parsed_date_string = self.__date_expression_parser_7(date_string_to_parse, ww1_year)
             return self.__is_date_in_multi_year_event(parsed_date_string, ww1_year, month, day)
+        # date is matches regex pattern 8
         elif (re.search(self.__DATE_EXPRESSION_8, date_string_to_parse)):
             parsed_date_string = self.__date_expression_parser_8(date_string_to_parse, ww1_year)
             return parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]
+        # date is matches regex pattern 9
         elif (re.search(self.__DATE_EXPRESSION_9, date_string_to_parse)):
             parsed_date_string = self.__date_expression_parser_9(date_string_to_parse, ww1_year)
             return self.__is_date_in_multi_year_event(parsed_date_string, ww1_year, month, day)
+        # date is matches regex pattern 10
         elif (re.search(self.__DATE_EXPRESSION_10, date_string_to_parse)):
             parsed_date_string = self.__date_expression_parser_10(date_string_to_parse, ww1_year)
             return parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]
+        # date is matches regex pattern 11
         elif (re.search(self.__DATE_EXPRESSION_11, date_string_to_parse)):
             parsed_date_string = self.__date_expression_parser_11(date_string_to_parse, ww1_year)
             return parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]
+        # date is matches regex pattern 12
         elif (re.search(self.__DATE_EXPRESSION_12, date_string_to_parse)):
             parsed_date_string = self.__date_expression_parser_12(date_string_to_parse, ww1_year)
             return parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]
@@ -94,15 +107,21 @@ class DateParser(object):
         else:
             return [0]
         
+        # initialize offset array
         event_year_offset_array = []
+        # populate event year offset array with different between ww1_year and and start date from parsed_date_string
+        # offset values will be added to ww1_year from events_table to correctly add year for event
         while (ww1_year <= parsed_date_string[1].year):
             if parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]:
                 event_year_offset_array.append(ww1_year - parsed_date_string[0].year)
             ww1_year += 1
         
+        # return offset array to calling function
         return event_year_offset_array
     
     def __is_date_in_multi_year_event(self, parsed_date_string: list[date], ww1_year: int, month: int, day: int) -> bool:
+        # increment ww1_year and compare against start date and end date from parsed_date_string to determine if the date
+        # is part of a multi-year event
         while (ww1_year <= parsed_date_string[1].year):
             if parsed_date_string[0] <= date(ww1_year, month, day) <= parsed_date_string[1]:
                 return True
