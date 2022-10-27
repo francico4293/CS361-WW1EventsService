@@ -19,9 +19,50 @@ The API specification below details all aspects of the WW1 events service includ
 * Example requests
 * Example responses
 
-In addition to the detail provided in the API specification below, the spec assumes the protocol, host, and port will be appended in front of the base URL
-for the endpoint. As an example, if the server host is 127.0.0.1 and it is running on port 5000, then the HTTP request to get WW1 events for a specific 
-day and month would be sent to: http://127.0.0.1:5000/events, and the request body must contain the JSON object detailed in the API specification below.
+## Requesting Data
+Note: Please refer to the API spec below for additional details
+
+Requests for WW1 events are to be sent as an HTTP GET request to the GET /events endpoint detailed in the API spec. If the server is running locally on
+port 5000, the HTTP GET request would be sent to http://localhost:5000/events.
+
+The request for WW1 events must include a request body containing a JSON object specifying the day and month to get WW1 events for. The day and month
+attributes both must have integer values. An example request object is:
+
+```
+{
+  "day": 10,
+  "month": 5
+}
+```
+
+## Receiving Data
+Note: Please refer to the API spec below for additional details
+
+Receiving data from the WW1 events service is done by capturing the JSON object returned in the response body of a successful request. The events data
+sent back in response to a successful HTTP GET request will be in the response body and will be a JSON object containing an events array. The array will
+contain JSON objects representing each event that took place on the day and month provided in the request. An example response object is:
+
+```
+{
+    “events”: [
+        {
+            “event”: “Battle of Krivolak, first of the Salonika front”,
+            “theater_front_campaign”: “Balkan, Macedonian”,
+            “year”: 1915
+        },
+        {
+            “event”: “Third Battle of the Isonzo
+            “theater_front_campaign”: “Italian”,
+            “year”: 1915
+        },
+        {
+            “event”: “Conquest of Romania by Central Powers”,
+            “theater_front_campaign”: “Balkan”,
+            “year”: 1916
+        },
+    ]
+}
+```
 
 ## Example Requests
 Programmatic example call with JavaScript:
