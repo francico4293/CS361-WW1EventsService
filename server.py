@@ -41,7 +41,7 @@ def events():
             { "Error": "Request object contains 1 or more misconfigured attribute values" },
             HTTP_400_BAD_REQUEST
         )
-    except Exception as err:
+    except Exception:
         return make_response(
             { "Error": "An internal server error has occurred" },
             HTTP_500_INTERNAL_SERVER_ERROR
