@@ -98,3 +98,6 @@ Example call with Postman:
 <img width="689" alt="image" src="https://user-images.githubusercontent.com/76921481/198404680-910dbae5-b98f-477b-b74c-8a91ee344658.png">
 <img width="689" alt="image" src="https://user-images.githubusercontent.com/76921481/198404952-a02e6454-4aac-4829-adec-faf69827c24c.png">
 <img width="688" alt="image" src="https://user-images.githubusercontent.com/76921481/198405141-9475ebb1-8d17-4c1c-8e80-fe859b94d07a.png">
+
+# UML Sequence Diagram
+<img width="801" alt="image" src="https://user-images.githubusercontent.com/76921481/198422256-90da3b6d-178b-4ab7-a7a0-85e79d078212.png">
